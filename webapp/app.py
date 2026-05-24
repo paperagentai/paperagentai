@@ -218,27 +218,37 @@ def _run_step(step_key, api_key, base_url, model, q):
     elif step_key == "4b":
         variables["04a_code"] = _read_file(os.path.join(LOG_DIR, "04a_code.md"))
     elif step_key == "5a":
+        # 5a writes Related Work + Intro — does NOT need results
+        variables["01_literature"] = _read_file(os.path.join(LOG_DIR, "01_literature.md"))
+        variables["02_research_questions"] = _read_file(os.path.join(LOG_DIR, "02_research_questions.md"))
+        variables["03_experiment_design"] = _read_file(os.path.join(LOG_DIR, "03_experiment_design.md"))
+    elif step_key == "5b":
+        # 5b writes Methodology — does NOT need results
+        variables["02_research_questions"] = _read_file(os.path.join(LOG_DIR, "02_research_questions.md"))
+        variables["03_experiment_design"] = _read_file(os.path.join(LOG_DIR, "03_experiment_design.md"))
+        variables["05a_paper"] = _read_file(os.path.join(LOG_DIR, "05a_paper.md"))
+    elif step_key in ("5c", "5d"):
+        # 5c (Results) and 5d (Discussion) REQUIRE the results file
         results_path = os.path.join(LOG_DIR, "05_results.md")
         if not os.path.exists(results_path):
             _emit(q, "error", "Results file not found. Complete experiments first — save results to logs/05_results.md")
             _emit(q, "done", "")
             return
-        variables["01_literature"] = _read_file(os.path.join(LOG_DIR, "01_literature.md"))
-        variables["02_research_questions"] = _read_file(os.path.join(LOG_DIR, "02_research_questions.md"))
-        variables["03_experiment_design"] = _read_file(os.path.join(LOG_DIR, "03_experiment_design.md"))
-    elif step_key == "5b":
-        variables["02_research_questions"] = _read_file(os.path.join(LOG_DIR, "02_research_questions.md"))
-        variables["03_experiment_design"] = _read_file(os.path.join(LOG_DIR, "03_experiment_design.md"))
-        variables["05a_paper"] = _read_file(os.path.join(LOG_DIR, "05a_paper.md"))
-    elif step_key == "5c":
-        variables["05_results"] = _read_file(os.path.join(LOG_DIR, "05_results.md"))
-        variables["05a_paper"] = _read_file(os.path.join(LOG_DIR, "05a_paper.md"))
-        variables["05b_paper"] = _read_file(os.path.join(LOG_DIR, "05b_paper.md"))
-    elif step_key == "5d":
-        variables["05a_paper"] = _read_file(os.path.join(LOG_DIR, "05a_paper.md"))
-        variables["05b_paper"] = _read_file(os.path.join(LOG_DIR, "05b_paper.md"))
-        variables["05c_paper"] = _read_file(os.path.join(LOG_DIR, "05c_paper.md"))
+        if step_key == "5c":
+            variables["05_results"] = _read_file(os.path.join(LOG_DIR, "05_results.md"))
+            variables["05a_paper"] = _read_file(os.path.join(LOG_DIR, "05a_paper.md"))
+            variables["05b_paper"] = _read_file(os.path.join(LOG_DIR, "05b_paper.md"))
+        else:  # 5d
+            variables["05a_paper"] = _read_file(os.path.join(LOG_DIR, "05a_paper.md"))
+            variables["05b_paper"] = _read_file(os.path.join(LOG_DIR, "05b_paper.md"))
+            variables["05c_paper"] = _read_file(os.path.join(LOG_DIR, "05c_paper.md"))
     elif step_key == "5e":
+        # 5e reviews assembled paper — needs 5d output to exist
+        d_path = os.path.join(LOG_DIR, "05d_paper.md")
+        if not os.path.exists(d_path):
+            _emit(q, "error", "Step 5d must complete first — 05d_paper.md not found.")
+            _emit(q, "done", "")
+            return
         variables["05a_paper"] = _read_file(os.path.join(LOG_DIR, "05a_paper.md"))
         variables["05b_paper"] = _read_file(os.path.join(LOG_DIR, "05b_paper.md"))
         variables["05c_paper"] = _read_file(os.path.join(LOG_DIR, "05c_paper.md"))

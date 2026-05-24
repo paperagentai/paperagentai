@@ -383,8 +383,15 @@ def _require_results():
         print("  Complete Step 4b first: run experiments and save results.")
         sys.exit(1)
 
+def _require_log(filename: str, reason: str):
+    """Block if a required log file from a previous step is missing."""
+    path = f"{LOG_DIR}/{filename}"
+    if not os.path.exists(path):
+        print(f"\n  [ERROR] Required log not found: {path}")
+        print(f"  {reason}")
+        sys.exit(1)
+
 def step5a(debug):
-    _require_results()
     run_step(
         step_num    = "5a",
         title       = "Write Paper — Related Work + Introduction",
@@ -400,7 +407,6 @@ def step5a(debug):
     )
 
 def step5b(debug):
-    _require_results()
     run_step(
         step_num    = "5b",
         title       = "Write Paper — Methodology + Experimental Setup",
@@ -448,6 +454,7 @@ def step5d(debug):
     )
 
 def step5e(debug):
+    _require_log("05d_paper.md", "Step 5d must complete first.")
     run_step(
         step_num    = "5e",
         title       = "Review Paper — Targeted Modifications Only",
