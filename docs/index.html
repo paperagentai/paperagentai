@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PaperAgent — Automated Research Pipeline</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar -->
+    <nav id="sidebar">
+      <div class="sidebar-header">
+        <h1>🧪 PaperAgent</h1>
+        <span class="subtitle">Automated Research Pipeline</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#" data-tab="config" class="nav-link active">⚙️ Config</a></li>
+        <li><a href="#" data-tab="pipeline" class="nav-link">🚀 Pipeline</a></li>
+        <li><a href="#" data-tab="logs" class="nav-link">📄 Logs</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <span id="status-indicator" class="status-idle">● Idle</span>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="content">
+      <!-- CONFIG TAB -->
+      <section id="tab-config" class="tab active">
+        <h2>Configuration</h2>
+        <p class="tab-desc">Set your research question, domain context, and API settings. Then run the pipeline backend locally or on a server.</p>
+
+        <div class="config-section">
+          <h3>🔌 Backend Connection</h3>
+          <div class="form-group">
+            <label for="backend-url">Backend API URL</label>
+            <input type="text" id="backend-url" value="http://localhost:5000" placeholder="http://localhost:5000">
+            <small>Where the Flask backend is running. Default: <code>http://localhost:5000</code>. Change this if your backend is on a different host.</small>
+          </div>
+        </div>
+
+        <div class="config-section">
+          <h3>🔑 LLM API Settings</h3>
+          <div class="form-group">
+            <label for="api-key">API Key</label>
+            <input type="password" id="api-key" placeholder="sk-...">
+            <small>Your LLM API key. Sent to the backend — never stored by GitHub Pages.</small>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="base-url">LLM Base URL</label>
+              <input type="text" id="base-url" value="https://api.deepseek.com">
+            </div>
+            <div class="form-group">
+              <label for="model">Model</label>
+              <input type="text" id="model" value="deepseek-v4-pro">
+            </div>
+          </div>
+        </div>
+
+        <div class="config-section">
+          <h3>🎯 Research Question</h3>
+          <p class="hint">One sentence — the central question. This anchors every pipeline step.</p>
+          <textarea id="research-question" rows="3" placeholder="e.g. Do instruction-tuned LLMs exhibit measurable demographic bias in open-ended advice generation?"></textarea>
+        </div>
+
+        <div class="config-section">
+          <h3>📚 Research Context</h3>
+          <p class="hint">Domain-specific details: venue, literature domains, frameworks, experiment constraints, evaluation approach, tools.</p>
+          <textarea id="research-context" rows="15" placeholder="# Research Context&#10;&#10;## Submission Venue&#10;...&#10;&#10;## Literature Review — Domains to Cover&#10;..."></textarea>
+        </div>
+
+        <div class="config-section">
+          <h3>📖 Recent Papers</h3>
+          <p class="hint">Post-training-cutoff papers. Format:<br><code>## Paper N</code> / <code>**Title:** ...</code> / <code>**URL:** ...</code></p>
+          <textarea id="recent-papers" rows="8" placeholder="## Paper 1&#10;**Title:** ...&#10;**URL:** https://..."></textarea>
+        </div>
+
+        <div class="config-section">
+          <h3>📝 Feedback (for Step 5f)</h3>
+          <p class="hint">Optional reviewer feedback — injected into the review step.</p>
+          <textarea id="feedback" rows="4" placeholder="Reviewer comments..."></textarea>
+        </div>
+
+        <button id="btn-save-config" class="btn btn-primary">💾 Save to Backend</button>
+        <span id="config-saved-msg" class="saved-msg"></span>
+        <span id="config-error-msg" class="error-msg"></span>
+      </section>
+
+      <!-- PIPELINE TAB -->
+      <section id="tab-pipeline" class="tab">
+        <h2>Run Pipeline</h2>
+        <p class="tab-desc">Execute steps individually or run the full pipeline end-to-end. Requires the backend to be running.</p>
+
+        <div class="pipeline-controls">
+          <button id="btn-run-all" class="btn btn-primary">▶️ Run All Steps</button>
+          <button id="btn-cancel" class="btn btn-danger" disabled>⏹️ Cancel</button>
+          <span id="run-status" class="run-status"></span>
+        </div>
+
+        <div class="step-grid" id="step-grid">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Output panel -->
+        <div class="output-panel" id="output-panel">
+          <div class="output-header">
+            <h3>📤 Output <span id="output-step-label"></span></h3>
+            <button id="btn-clear-output" class="btn btn-sm">Clear</button>
+          </div>
+          <pre id="output-content">Select a step and click Run, or click "Run All Steps" to begin.</pre>
+        </div>
+      </section>
+
+      <!-- LOGS TAB -->
+      <section id="tab-logs" class="tab">
+        <h2>Log Files</h2>
+        <p class="tab-desc">View and manage generated outputs from each step. Logs are stored on the backend.</p>
+        <button id="btn-refresh-logs" class="btn btn-secondary">🔄 Refresh</button>
+        <div class="log-list" id="log-list">
+          <!-- Populated by JS -->
+        </div>
+        <div class="log-viewer" id="log-viewer" style="display:none;">
+          <div class="output-header">
+            <h3 id="log-viewer-title"></h3>
+            <button id="btn-close-log" class="btn btn-sm">✕ Close</button>
+          </div>
+          <pre id="log-viewer-content"></pre>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

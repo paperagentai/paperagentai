@@ -13,6 +13,11 @@ This file holds everything domain-specific beyond the question itself.
 # and what kind of venue it is (peer-reviewed, AI-focused, etc.).
 # Example: "NeurIPS 2026 — a top-tier ML conference."
 
+CAISc 2026 — a conference where AI systems are recognized as primary
+contributors to scientific research.
+Submit at: https://openreview.net/group?id=CAISc/2026
+
+
 ---
 
 ## Literature Review — Domains to Cover
@@ -26,6 +31,13 @@ This file holds everything domain-specific beyond the question itself.
 #   3. Evaluation metrics for fairness
 #   ...
 
+1. AI and poetry generation across languages — note which languages
+   have been studied, which haven't, and what that distribution reveals
+2. NLP for Sanskrit, Telugu, Kannada specifically
+3. Computational prosody and metrical analysis tools
+4. Philosophy of language understanding in AI systems
+5. Cross-linguistic evaluation methodology
+6. Classical Indic poetics — rasa theory, dhvani, chandas literature
 
 ## Literature Review — Theoretical Frameworks
 
@@ -35,6 +47,13 @@ This file holds everything domain-specific beyond the question itself.
 # Example: "Manning (2022) on emergent abilities — what they claim
 #            vs what the evidence supports"
 
+After completing the review, identify the 3 most relevant theoretical
+frameworks. Consider but do not limit yourself to:
+- Bender & Koller (2020) "Climbing towards NLU" — form vs meaning
+- Searle's Chinese Room argument — syntax vs semantics
+- Chomsky's competence vs performance distinction
+- Standard LLM evaluation metrics (BLEU, BERTScore, perplexity)
+  and why they are insufficient for poetry
 
 ---
 
@@ -46,6 +65,13 @@ This file holds everything domain-specific beyond the question itself.
 # Example: "We ARE using the HuggingFace API. We are NOT fine-tuning
 #            any models. All code must run on a single GPU."
 
+- We are NOT building prosody validators from scratch
+- We are NOT training any models
+- We ARE calling existing LLMs via API: Claude (Anthropic),
+  GPT-4o (OpenAI), Gemini (Google), DeepSeek
+- We ARE using whatever existing prosody tools exist for Sanskrit,
+  Telugu, and Kannada
+- All code must be runnable in Python
 
 ## Experiment Design — Evaluation
 
@@ -55,7 +81,27 @@ This file holds everything domain-specific beyond the question itself.
 # If there is no domain-specific evaluation challenge, keep it brief:
 # "All evaluation is automated using standard NLP metrics."
 
+All evaluation must be fully automated. No human judges.
 
+Where aesthetic or cultural judgment is required — rasa evaluation,
+dhvani assessment, metrical appropriateness, aucitya — use a
+separate LLM instance acting as a simulated sahrdaya:
+- A different model from the generator wherever possible
+  (e.g. if Claude generates, GPT-4o evaluates — and vice versa)
+- Given explicit classical poetics criteria in its system prompt:
+  rasa categories, dhvani definition, aucitya, metrical mood-affiliations
+- Required to justify every judgment with reasoning — a bare score
+  without reasoning is invalid
+- Asked to rate on a structured rubric, not a holistic impression
+
+For RQ3 — iterative refinement loop:
+- Generator LLM produces a verse
+- Simulated sahrdaya LLM evaluates against rasa/dhvani criteria
+  and provides structured feedback
+- Generator receives feedback and produces a revised verse
+- Repeat for 3-5 cycles, logging every generation, evaluation, revision
+- The question is whether the loop converges toward aesthetic quality
+  and what the trajectory reveals about the locus of poetic understanding
 
 ## Experiment Design — Domain Tools
 
@@ -68,6 +114,12 @@ This file holds everything domain-specific beyond the question itself.
 # If you don't know what tools exist, write "unknown — let the
 # pipeline discover them during the literature review."
 
+List every existing Python library, API, or tool available for:
+- Sanskrit prosody analysis
+- Telugu prosody analysis
+- Kannada prosody analysis
+- General Indic NLP
+Include: library name, what it does, where to find it, known limitations.
 
 ---
 
@@ -78,7 +130,10 @@ This file holds everything domain-specific beyond the question itself.
 # must NOT be told, specific output formats required, etc.
 # Delete this section if you have no special code generation needs.
 
-
+For Experiment 2 specifically: do NOT include the guru/laghu rules
+in the prompt — the model must demonstrate what it knows without
+being coached. The prompt should simply ask the model to assign G/L
+based on its own knowledge of the language's prosody.
 
 ---
 
@@ -91,7 +146,19 @@ This file holds everything domain-specific beyond the question itself.
 # Delete any sub-item that has no special requirement.
 
 
+Introduction: Motivate metrical poetry in Sanskrit, Telugu, and
+Kannada as the diagnostic instrument for LLM language understanding.
 
+Methodology: Document the sahṛdaya panel setup for Experiment 3,
+including selection criteria and evaluation protocol.
+
+Results: Include a cross-linguistic comparison — does the failure
+pattern differ across Sanskrit, Telugu, and Kannada, and what does
+that reveal about what LLMs have and haven't learned?
+
+Discussion: Connect findings to Bender & Koller (2020), Searle's
+Chinese Room, and Chomsky's competence vs performance — but only
+where genuinely supported by the results.
 ---
 
 ## Paper Review Notes
@@ -101,4 +168,6 @@ This file holds everything domain-specific beyond the question itself.
 # to look for — unresolved threads, pending evaluations, claims
 # that need grounding in your specific results.
 
+- Rasa evaluation described as pending — resolve: either report
+  results or explicitly reframe as future work in methodology
 

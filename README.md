@@ -1,36 +1,72 @@
-# Research Pipeline
+# PaperAgent — Automated Research Pipeline
 
 An automated pipeline that takes a research question from literature review
 through experiment design, code generation, and paper writing.
 
-To use it for a new topic, edit **`prompts/research_question.md`** and
-**`context/research_context.md`**, then run. Both files have inline comments
-explaining what to change.
+Two ways to use it:
+- **Web UI** — open `https://paperagentai.github.io` in your browser
+- **CLI** — run `python pipeline.py --step 1` in the terminal
+
+Both read from the same `prompts/` and `context/` files and write to the
+same `logs/` directory, so you can switch between them freely.
 
 ---
 
-## Setup
+## Quick Start — Web UI
+
+### 1. Start the backend (on your machine or a server)
+```bash
+cd paperagentai
+pip install openai flask
+python webapp/app.py
+```
+The backend runs on `http://localhost:5000`.
+
+### 2. Open the frontend
+Go to **`https://paperagentai.github.io`** (or open `http://localhost:5000` directly).
+
+### 3. Configure
+In the **Config** tab:
+- **Backend API URL** — `http://localhost:5000` (default; change if backend is elsewhere)
+- **API Key** — your LLM provider key
+- **LLM Base URL** — `https://api.deepseek.com` (works with any OpenAI-compatible API)
+- **Model** — `deepseek-v4-pro` (or any model your provider supports)
+- **Research Question** — your central question (one sentence)
+- **Research Context** — domain details, venue, experiment constraints, etc.
+- Click **Save to Backend**
+
+### 4. Run the pipeline
+Go to the **Pipeline** tab, click ▶ Run on any step, or **Run All Steps**.
+Output streams token-by-token in real time.
+
+---
+
+## Quick Start — CLI
 
 ```bash
 pip install openai
-```
-
-Open `pipeline.py` and set your API key, endpoint, and model at the top:
-
-```python
-API_KEY  = os.getenv("LLM_API_KEY", "your_key_here")
-BASE_URL = "https://api.deepseek.com"   # any OpenAI-compatible endpoint
-MODEL    = "deepseek-v4-pro"
-```
-
-Then export your key:
-
-```bash
 export LLM_API_KEY="your_key_here"
+python pipeline.py --step 1    # literature review
+python pipeline.py --step all  # or run everything at once
 ```
 
 The pipeline uses the OpenAI client, so any OpenAI-compatible API works —
 DeepSeek, OpenAI, Together.ai, a local Ollama instance, etc.
+See **[CLI Reference](#cli-reference)** below for all commands.
+
+---
+
+## 🔐 How API Keys Are Handled
+
+| Where | Stored? | Details |
+|---|---|---|
+| **Browser** (GitHub Pages) | ❌ Not persisted | The key field is a `<input type="password">`. It's only in the tab's memory. Refreshing the page clears it. |
+| **Browser localStorage** | ❌ Not stored | Only the Backend API URL is saved in localStorage. The LLM API key is **never** written to localStorage or cookies. |
+| **Backend disk** | ❌ Not written | The Flask backend never writes your API key to any file. It only stores it in process memory (`os.environ`) for the lifetime of the server process. |
+| **Network** | Sent over HTTPS | When you click Save or Run, the key is sent to your backend. If your backend is on `localhost`, it never leaves your machine. |
+
+**If using the CLI**, export `LLM_API_KEY` in your shell or set it in `pipeline.py` —
+that key lives in your shell environment / process memory.
 
 ---
 
@@ -52,7 +88,7 @@ content into Step 1 automatically.
 
 ---
 
-## How To Run
+## CLI Reference
 
 ### Run one step at a time (recommended)
 ```bash
@@ -91,9 +127,17 @@ Get the zip from Overleaf: Menu → Download → Source.
 ## Folder Structure
 
 ```
-research_pipeline/
-├── pipeline.py              ← main script
+paperagentai/
+├── pipeline.py              ← main CLI script
 ├── README.md
+├── docs/                    ← GitHub Pages frontend (static site)
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+├── webapp/                  ← Flask backend
+│   ├── app.py               ← API server (CORS-enabled)
+│   ├── templates/
+│   └── static/
 ├── context/
 │   ├── research_context.md  ← domain config — EDIT THIS for your topic
 │   ├── recent_papers.md     ← papers to inject into literature review
