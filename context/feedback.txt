@@ -1,0 +1,21 @@
+# External Feedback
+
+Replace this file with actual feedback before running Step 5f.
+Accepted formats: feedback.txt, feedback.md, or feedback.pdf
+
+Feedback can be structured (with sections like Strengths/Weaknesses) 
+or unstructured (free-form comments). The model will read and triage 
+all of it regardless of format.
+
+---
+
+## Strengths
+
+
+## Weaknesses
+
+
+## Specific Comments
+
+
+## Suggestions
