@@ -13,4 +13,3 @@
 #    in open-ended advice generation, and does chain-of-thought
 #    prompting reduce or amplify it?"
 
-What does metrical poetry in Sanskrit, Telugu, and Kannada reveal about the gap between linguistic competence and language understanding in LLMs?
